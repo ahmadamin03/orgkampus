@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kegiatan - Sistem Manajemen Organisasi Kampus</title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-graduation-cap logo"></i>
+            <span class="logo">OrgKampus</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="anggota.html" class="nav-link"><i class="fa-solid fa-users"></i> Anggota</a></li>
+            <li class="nav-item"><a href="kegiatan.html" class="nav-link"><i class="fa-solid fa-calendar-check"></i> Kegiatan</a></li>
+            <li class="nav-item"><a href="keuangan.html" class="nav-link"><i class="fa-solid fa-wallet"></i> Keuangan</a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> Dokumen</a></li>
+        </ul>
+        <div style="padding: 1.5rem;">
+            <a href="../auth/login.html" class="nav-link" style="color: var(--text-muted);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span style="font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-title">
+                <h2>Program Kerja & Kegiatan</h2>
+                <button class="btn btn-primary"><i class="fa-solid fa-plus" style="margin-right: 0.5rem;"></i> Buat Kegiatan Baru</button>
+            </div>
+
+            <div class="grid grid-cols-3">
+                <!-- Kegiatan Card 1 -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-active">Persiapan</span>
+                        <i class="fa-solid fa-ellipsis-vertical text-muted" style="cursor: pointer;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Seminar Teknologi 2026</h3>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-calendar" style="margin-right: 0.5rem;"></i> 12 Oktober 2026</p>
+                    <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">Seminar nasional mengundang pemateri ahli AI dan Web Development.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Ketupel: Andi W.</span>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Detail</button>
+                    </div>
+                </div>
+
+                <!-- Kegiatan Card 2 -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-pending">Terjadwal</span>
+                        <i class="fa-solid fa-ellipsis-vertical text-muted" style="cursor: pointer;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Rapat Rutin Bulanan</h3>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-calendar" style="margin-right: 0.5rem;"></i> 15 Oktober 2026</p>
+                    <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">Evaluasi kinerja seluruh divisi bulan September dan perencanaan Oktober.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Ketupel: Budi S.</span>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Detail</button>
+                    </div>
+                </div>
+
+                <!-- Kegiatan Card 3 -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-inactive">Selesai</span>
+                        <i class="fa-solid fa-ellipsis-vertical text-muted" style="cursor: pointer;"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Open Recruitment</h3>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-calendar" style="margin-right: 0.5rem;"></i> 01 - 10 September 2026</p>
+                    <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">Penerimaan anggota baru periode tahun ajaran genap.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Ketupel: Rina M.</span>
+                        <button class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">LPJ</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../../../public/js/script.js"></script>
+</body>
+</html>

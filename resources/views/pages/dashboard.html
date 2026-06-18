@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistem Manajemen Organisasi Kampus</title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-graduation-cap logo"></i>
+            <span class="logo">OrgKampus</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="anggota.html" class="nav-link"><i class="fa-solid fa-users"></i> Anggota</a></li>
+            <li class="nav-item"><a href="kegiatan.html" class="nav-link"><i class="fa-solid fa-calendar-check"></i> Kegiatan</a></li>
+            <li class="nav-item"><a href="keuangan.html" class="nav-link"><i class="fa-solid fa-wallet"></i> Keuangan</a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> Dokumen</a></li>
+        </ul>
+        <div style="padding: 1.5rem;">
+            <a href="../auth/login.html" class="nav-link" style="color: var(--text-muted);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="display: flex; align-items: center; background: var(--bg-dark); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border-color);">
+                    <i class="fa-solid fa-search text-muted" style="margin-right: 0.5rem;"></i>
+                    <input type="text" placeholder="Cari..." style="background: none; border: none; color: white; outline: none;">
+                </div>
+            </div>
+            <div class="header-right">
+                <i class="fa-regular fa-bell text-muted" style="font-size: 1.25rem; cursor: pointer;"></i>
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span style="font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-title">
+                <h2>Dashboard</h2>
+                <button class="btn btn-primary"><i class="fa-solid fa-plus" style="margin-right: 0.5rem;"></i> Buat Pengumuman</button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-4" style="margin-bottom: 2rem;">
+                <div class="card stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Anggota</h3>
+                        <p>124</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-calendar"></i></div>
+                    <div class="stat-info">
+                        <h3>Kegiatan Aktif</h3>
+                        <p>3</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="stat-info">
+                        <h3>Kas Organisasi</h3>
+                        <p>Rp 2.5M</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="stat-info">
+                        <h3>Surat Masuk</h3>
+                        <p>12</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2">
+                <!-- Recent Activities -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-main);">Kegiatan Mendatang</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Kegiatan</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Seminar Teknologi 2026</td>
+                                    <td>12 Okt 2026</td>
+                                    <td><span class="badge badge-active">Persiapan</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rapat Rutin Bulanan</td>
+                                    <td>15 Okt 2026</td>
+                                    <td><span class="badge badge-pending">Terjadwal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pelatihan Kepemimpinan</td>
+                                    <td>20 Nov 2026</td>
+                                    <td><span class="badge badge-pending">Terjadwal</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-main);">Transaksi Terakhir</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Deskripsi</th>
+                                    <th>Jumlah</th>
+                                    <th>Tipe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Iuran Bulanan Anggota (Sep)</td>
+                                    <td class="text-primary">+ Rp 500.000</td>
+                                    <td>Pemasukan</td>
+                                </tr>
+                                <tr>
+                                    <td>Pembelian Konsumsi Rapat</td>
+                                    <td style="color: #f87171;">- Rp 150.000</td>
+                                    <td>Pengeluaran</td>
+                                </tr>
+                                <tr>
+                                    <td>Sponsor Seminar IT</td>
+                                    <td class="text-primary">+ Rp 2.000.000</td>
+                                    <td>Pemasukan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../../../public/js/script.js"></script>
+</body>
+</html>

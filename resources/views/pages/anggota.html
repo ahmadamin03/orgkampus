@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anggota - Sistem Manajemen Organisasi Kampus</title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-graduation-cap logo"></i>
+            <span class="logo">OrgKampus</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="anggota.html" class="nav-link"><i class="fa-solid fa-users"></i> Anggota</a></li>
+            <li class="nav-item"><a href="kegiatan.html" class="nav-link"><i class="fa-solid fa-calendar-check"></i> Kegiatan</a></li>
+            <li class="nav-item"><a href="keuangan.html" class="nav-link"><i class="fa-solid fa-wallet"></i> Keuangan</a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> Dokumen</a></li>
+        </ul>
+        <div style="padding: 1.5rem;">
+            <a href="../auth/login.html" class="nav-link" style="color: var(--text-muted);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span style="font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-title">
+                <h2>Manajemen Anggota</h2>
+                <button class="btn btn-primary"><i class="fa-solid fa-plus" style="margin-right: 0.5rem;"></i> Tambah Anggota</button>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; align-items: center;">
+                    <div class="search-bar" style="display: flex; align-items: center; background: var(--bg-dark); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); width: 300px;">
+                        <i class="fa-solid fa-search text-muted" style="margin-right: 0.5rem;"></i>
+                        <input type="text" placeholder="Cari nama atau NIM..." style="background: none; border: none; color: white; outline: none; width: 100%;">
+                    </div>
+                    <div>
+                        <select class="form-control" style="width: auto; padding: 0.4rem 1rem;">
+                            <option value="">Semua Divisi</option>
+                            <option value="inti">Pengurus Inti</option>
+                            <option value="humas">Humas</option>
+                            <option value="kominfo">Kominfo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>NIM</th>
+                                <th>Nama Lengkap</th>
+                                <th>Divisi</th>
+                                <th>Jabatan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>220101001</td>
+                                <td>Budi Santoso</td>
+                                <td>Pengurus Inti</td>
+                                <td>Ketua Umum</td>
+                                <td><span class="badge badge-active">Aktif</span></td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>220101002</td>
+                                <td>Siti Aminah</td>
+                                <td>Pengurus Inti</td>
+                                <td>Sekretaris</td>
+                                <td><span class="badge badge-active">Aktif</span></td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>230101015</td>
+                                <td>Andi Wijaya</td>
+                                <td>Humas</td>
+                                <td>Staff</td>
+                                <td><span class="badge badge-active">Aktif</span></td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>210101099</td>
+                                <td>Rina Melati</td>
+                                <td>Kominfo</td>
+                                <td>Koordinator</td>
+                                <td><span class="badge badge-inactive">Non-aktif</span></td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-pen"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../../../public/js/script.js"></script>
+</body>
+</html>

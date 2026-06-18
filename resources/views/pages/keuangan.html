@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keuangan - Sistem Manajemen Organisasi Kampus</title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-graduation-cap logo"></i>
+            <span class="logo">OrgKampus</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="anggota.html" class="nav-link"><i class="fa-solid fa-users"></i> Anggota</a></li>
+            <li class="nav-item"><a href="kegiatan.html" class="nav-link"><i class="fa-solid fa-calendar-check"></i> Kegiatan</a></li>
+            <li class="nav-item"><a href="keuangan.html" class="nav-link"><i class="fa-solid fa-wallet"></i> Keuangan</a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> Dokumen</a></li>
+        </ul>
+        <div style="padding: 1.5rem;">
+            <a href="../auth/login.html" class="nav-link" style="color: var(--text-muted);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span style="font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-title">
+                <h2>Buku Kas Keuangan</h2>
+                <div>
+                    <button class="btn btn-outline" style="margin-right: 0.5rem;"><i class="fa-solid fa-download" style="margin-right: 0.5rem;"></i> Ekspor Laporan</button>
+                    <button class="btn btn-primary"><i class="fa-solid fa-plus" style="margin-right: 0.5rem;"></i> Catat Transaksi</button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-3" style="margin-bottom: 2rem;">
+                <div class="card stat-card" style="border-left: 4px solid #4ade80;">
+                    <div class="stat-info">
+                        <h3>Total Pemasukan (Bulan Ini)</h3>
+                        <p style="color: #4ade80;">Rp 2.500.000</p>
+                    </div>
+                </div>
+                <div class="card stat-card" style="border-left: 4px solid #f87171;">
+                    <div class="stat-info">
+                        <h3>Total Pengeluaran (Bulan Ini)</h3>
+                        <p style="color: #f87171;">Rp 650.000</p>
+                    </div>
+                </div>
+                <div class="card stat-card" style="border-left: 4px solid var(--primary-color);">
+                    <div class="stat-info">
+                        <h3>Saldo Kas Akhir</h3>
+                        <p>Rp 5.350.000</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1.5rem;">Riwayat Transaksi</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Deskripsi</th>
+                                <th>Kategori</th>
+                                <th>Pemasukan</th>
+                                <th>Pengeluaran</th>
+                                <th>Bukti Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15 Sep 2026</td>
+                                <td>Pembelian Konsumsi Rapat</td>
+                                <td>Konsumsi</td>
+                                <td>-</td>
+                                <td style="color: #f87171;">Rp 150.000</td>
+                                <td><a href="#" class="text-primary"><i class="fa-solid fa-image"></i> Lihat</a></td>
+                            </tr>
+                            <tr>
+                                <td>10 Sep 2026</td>
+                                <td>Iuran Wajib Anggota (Sep)</td>
+                                <td>Iuran</td>
+                                <td style="color: #4ade80;">Rp 500.000</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>05 Sep 2026</td>
+                                <td>Sponsorship Seminar</td>
+                                <td>Sponsor</td>
+                                <td style="color: #4ade80;">Rp 2.000.000</td>
+                                <td>-</td>
+                                <td><a href="#" class="text-primary"><i class="fa-solid fa-file-pdf"></i> MoU</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../../../public/js/script.js"></script>
+</body>
+</html>

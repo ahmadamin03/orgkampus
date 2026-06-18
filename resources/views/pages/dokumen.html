@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumen - Sistem Manajemen Organisasi Kampus</title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-graduation-cap logo"></i>
+            <span class="logo">OrgKampus</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="anggota.html" class="nav-link"><i class="fa-solid fa-users"></i> Anggota</a></li>
+            <li class="nav-item"><a href="kegiatan.html" class="nav-link"><i class="fa-solid fa-calendar-check"></i> Kegiatan</a></li>
+            <li class="nav-item"><a href="keuangan.html" class="nav-link"><i class="fa-solid fa-wallet"></i> Keuangan</a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> Dokumen</a></li>
+        </ul>
+        <div style="padding: 1.5rem;">
+            <a href="../auth/login.html" class="nav-link" style="color: var(--text-muted);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span style="font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="page-title">
+                <h2>Arsip Persuratan & Dokumen</h2>
+                <button class="btn btn-primary"><i class="fa-solid fa-upload" style="margin-right: 0.5rem;"></i> Unggah Dokumen</button>
+            </div>
+
+            <div class="grid grid-cols-4" style="margin-bottom: 2rem;">
+                <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <i class="fa-solid fa-envelope-open-text text-primary" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1rem;">Surat Masuk</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">12 Berkas</p>
+                </div>
+                <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <i class="fa-solid fa-paper-plane text-primary" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1rem;">Surat Keluar</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">8 Berkas</p>
+                </div>
+                <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <i class="fa-solid fa-file-contract text-primary" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1rem;">Proposal & LPJ</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">5 Berkas</p>
+                </div>
+                <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    <i class="fa-solid fa-book text-primary" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1rem;">AD/ART & Aturan</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">2 Berkas</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Dokumen Terbaru</h3>
+                    <div class="search-bar" style="display: flex; align-items: center; background: var(--bg-dark); padding: 0.4rem 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <i class="fa-solid fa-search text-muted" style="margin-right: 0.5rem;"></i>
+                        <input type="text" placeholder="Cari nomor surat..." style="background: none; border: none; color: white; outline: none;">
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No. Surat</th>
+                                <th>Perihal</th>
+                                <th>Tipe</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>015/BEM/IX/2026</td>
+                                <td>Undangan Rapat Koordinasi</td>
+                                <td><span class="badge badge-active">Surat Keluar</span></td>
+                                <td>14 Sep 2026</td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; margin-right: 0.3rem;"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-download"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>002/SP/Rektorat/IX/2026</td>
+                                <td>Pemberitahuan Jadwal Dies Natalis</td>
+                                <td><span class="badge" style="background-color: rgba(59, 130, 246, 0.2); color: #60a5fa;">Surat Masuk</span></td>
+                                <td>10 Sep 2026</td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; margin-right: 0.3rem;"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-download"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Prop-01/SemTek/2026</td>
+                                <td>Proposal Pengajuan Dana Seminar</td>
+                                <td><span class="badge badge-pending">Proposal</span></td>
+                                <td>05 Sep 2026</td>
+                                <td>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; margin-right: 0.3rem;"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn btn-outline" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-download"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../../../public/js/script.js"></script>
+</body>
+</html>
