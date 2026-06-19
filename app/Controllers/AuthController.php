@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
 
 class AuthController {
     private $pdo;
@@ -19,17 +18,18 @@ class AuthController {
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
+            $nim  = $_POST['nim'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $password_confirm = $_POST['password_confirm'] ?? '';
 
             // Basic validation
             if (empty($name) || empty($email) || empty($password)) {
-                die('Please fill all fields');
+                die('Harap isi semua field yang wajib diisi.');
             }
 
             if ($password !== $password_confirm) {
-                die('Passwords do not match');
+                die('Konfirmasi password tidak cocok.');
             }
 
             // Hash password
@@ -44,7 +44,7 @@ class AuthController {
                 exit;
             } catch (PDOException $e) {
                 if ($e->getCode() == 23000) {
-                    die('Email already exists');
+                    die('Email sudah terdaftar.');
                 }
                 die('Database error: ' . $e->getMessage());
             }
@@ -65,9 +65,9 @@ class AuthController {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                session_start();
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_role'] = $user['role'];
                 header('Location: /index.php');
                 exit;
             } else {
@@ -77,7 +77,6 @@ class AuthController {
     }
 
     public function logout() {
-        session_start();
         session_destroy();
         header('Location: /index.php');
         exit;
