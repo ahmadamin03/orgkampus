@@ -70,8 +70,8 @@
             <span class="text-primary" style="font-weight: 700; font-size: 1.5rem; margin-left: 0.5rem;">Org</span><span style="font-weight: 700; font-size: 1.5rem;">Kampus</span>
         </div>
         <div class="header-actions">
-            <a href="resources/views/auth/login.html" class="btn btn-outline" style="margin-right: 0.5rem; border-radius: 6px;">Sign In</a>
-            <a href="resources/views/auth/signup.html" class="btn btn-primary" style="border-radius: 6px;">Sign Up</a>
+            <a href="index.php?route=login" class="btn btn-outline" style="margin-right: 0.5rem; border-radius: 6px;">Sign In</a>
+            <a href="index.php?route=signup" class="btn btn-primary" style="border-radius: 6px;">Sign Up</a>
         </div>
     </header>
 
@@ -79,8 +79,8 @@
         <h1 class="hero-title">Kelola Organisasi Kampus<br>Lebih <span>Modern & Efisien</span></h1>
         <p class="hero-subtitle">Platform lengkap untuk manajemen anggota, program kerja, kas keuangan, dan arsip dokumen dalam satu tempat.</p>
         <div class="hero-actions">
-            <a href="resources/views/auth/signup.html" class="btn btn-primary btn-large">Mulai Sekarang</a>
-            <a href="resources/views/auth/login.html" class="btn btn-outline btn-large">Sign In</a>
+            <a href="index.php?route=signup" class="btn btn-primary btn-large">Mulai Sekarang</a>
+            <a href="index.php?route=login" class="btn btn-outline btn-large">Sign In</a>
         </div>
     </section>
 </body>

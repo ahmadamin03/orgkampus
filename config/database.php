@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Str;
 use Pdo\Mysql;
 
@@ -182,3 +183,4 @@ return [
     ],
 
 ];
+
