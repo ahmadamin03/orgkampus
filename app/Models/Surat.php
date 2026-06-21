@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['nomor_surat', 'type', 'perihal', 'pengirim_penerima', 'tanggal', 'file_path', 'description'])]
+class Surat extends Model
+{
+    use HasFactory;
+}
