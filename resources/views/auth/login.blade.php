@@ -144,14 +144,7 @@
                     <p class="text-zinc-400 text-sm mt-1.5">Silakan masuk ke akun Anda untuk melanjutkan.</p>
                 </div>
 
-                @if(session('error'))
-                    <div class="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-6 flex items-start gap-3 animate-fade-in-up">
-                        <i class="fa-solid fa-triangle-exclamation mt-0.5 text-base flex-shrink-0 text-red-400"></i>
-                        <div class="text-xs sm:text-sm font-medium">
-                            {{ session('error') }}
-                        </div>
-                    </div>
-                @endif
+
 
                 <form action="{{ route('login.process') }}" method="POST" class="space-y-5">
                     @csrf

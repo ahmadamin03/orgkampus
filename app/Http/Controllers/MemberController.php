@@ -4,83 +4,84 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
     public function index()
     {
-        $members = User::latest()->get();
+        $org = Auth::user()->organization;
+        $members = $org->users()->latest()->get();
         return view('members.index', compact('members'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'nim' => 'nullable|string|unique:users',
-            'phone' => 'nullable|string',
-            'role_organisasi' => 'required|string',
-            'departemen' => 'nullable|string',
-            'status' => 'required|string',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|unique:users,email',
+            'nim' => 'nullable|string|max:50',
+            'phone' => 'nullable|string|max:20',
+            'role_organisasi' => 'required|string|max:100',
+            'departemen' => 'nullable|string|max:100',
+            'status' => 'required|in:Aktif,Nonaktif',
+            'password' => 'required|min:6',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'nim' => $request->nim,
-            'phone' => $request->phone,
-            'role_organisasi' => $request->role_organisasi,
-            'departemen' => $request->departemen,
-            'status' => $request->status,
-            'password' => Hash::make($request->password),
-        ]);
+        $data['password'] = Hash::make($data['password']);
+        $data['organization_id'] = Auth::user()->organization_id;
 
-        return redirect()->route('members.index')->with('success', 'Anggota berhasil ditambahkan.');
+        User::create($data);
+
+        return redirect()->route('members.index')
+            ->with('success', 'Anggota berhasil ditambahkan.');
     }
 
-    public function update(Request $request, User $member)
+    public function show(User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $member->id,
-            'nim' => 'nullable|string|unique:users,nim,' . $member->id,
-            'phone' => 'nullable|string',
-            'role_organisasi' => 'required|string',
-            'departemen' => 'nullable|string',
-            'status' => 'required|string',
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'nim' => $request->nim,
-            'phone' => $request->phone,
-            'role_organisasi' => $request->role_organisasi,
-            'departemen' => $request->departemen,
-            'status' => $request->status,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+        if ($user->organization_id !== Auth::user()->organization_id) {
+            abort(404);
         }
-
-        $member->update($data);
-
-        return redirect()->route('members.index')->with('success', 'Anggota berhasil diperbarui.');
+        return response()->json($user);
     }
 
-    public function destroy(User $member)
+    public function update(Request $request, User $user)
     {
-        if ($member->id === auth()->id()) {
-            return redirect()->route('members.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        if ($user->organization_id !== Auth::user()->organization_id) {
+            abort(404);
         }
 
-        $member->delete();
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'nim' => 'nullable|string|max:50',
+            'phone' => 'nullable|string|max:20',
+            'role_organisasi' => 'required|string|max:100',
+            'departemen' => 'nullable|string|max:100',
+            'status' => 'required|in:Aktif,Nonaktif',
+            'password' => 'nullable|min:6',
+        ]);
 
-        return redirect()->route('members.index')->with('success', 'Anggota berhasil dihapus.');
+        if ($data['password'] ?? false) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('members.index')
+            ->with('success', 'Anggota berhasil diperbarui.');
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+        $user->delete();
+        return redirect()->route('members.index')
+            ->with('success', 'Anggota berhasil dihapus.');
     }
 }

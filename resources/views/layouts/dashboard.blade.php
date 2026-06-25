@@ -42,6 +42,20 @@
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                        'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
                     }
                 }
             }
@@ -73,21 +87,20 @@
 <body class="h-full text-zinc-100 flex overflow-hidden">
 
     <!-- SIDEBAR FOR DESKTOP -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-black border-r border-zinc-900 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:static lg:h-full transition-transform duration-300 ease-in-out">
-        <div>
-            <!-- Sidebar Header / Logo -->
-            <div class="h-16 flex items-center gap-3 px-6 border-b border-zinc-900">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center shadow-lg shadow-brand-500/30">
-                    <i class="fa-solid fa-graduation-cap text-sm text-white"></i>
-                </div>
-                <span class="text-lg font-bold tracking-wider uppercase text-white">Org<span class="text-brand-500">Kampus</span></span>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-black border-r border-zinc-900 flex flex-col transform -translate-x-full lg:translate-x-0 lg:static lg:h-full transition-transform duration-300 ease-in-out">
+        <!-- Sidebar Header / Logo -->
+        <div class="h-16 flex items-center gap-3 px-6 border-b border-zinc-900 flex-shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                <i class="fa-solid fa-graduation-cap text-sm text-white"></i>
             </div>
+            <span class="text-lg font-bold tracking-wider uppercase text-white">Org<span class="text-brand-500">Kampus</span></span>
+        </div>
 
-            <!-- Navigation Links -->
-            <nav class="p-4 space-y-1.5">
+        <!-- Navigation Links (scrollable) -->
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1.5">
                 <!-- Dashboard Link -->
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('dashboard')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
-                    <i class="fa-solid fa-grid-horizontal w-5 text-center text-base"></i>
+                    <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
                     <span>Dasbor</span>
                 </a>
 
@@ -121,18 +134,20 @@
                     <span>Keuangan Kas</span>
                 </a>
             </nav>
-        </div>
 
         <!-- User Profile Footer / Logout -->
-        <div class="p-4 border-t border-zinc-900 bg-zinc-950/40">
+        <div class="p-4 border-t border-zinc-900 bg-zinc-950/40 flex-shrink-0">
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center font-bold text-white shadow-inner">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center font-bold text-white shadow-inner text-sm">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
                 <div class="overflow-hidden">
                     <h4 class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</h4>
                     <span class="text-xs text-zinc-500 truncate block">{{ auth()->user()->role_organisasi }}</span>
                 </div>
+            </div>
+            <div class="text-xs text-zinc-600 px-1 mb-3 truncate">
+                {{ auth()->user()->organization?->name }}
             </div>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
@@ -157,9 +172,8 @@
                 </button>
                 <h1 class="text-xl font-bold text-white">@yield('page_title', 'Dasbor')</h1>
             </div>
-            <div class="text-xs sm:text-sm text-zinc-400 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Database Terhubung (SQLite)</span>
+            <div class="text-xs sm:text-sm text-zinc-500">
+                {{ auth()->user()->organization?->name ?? 'OrgKampus' }}
             </div>
         </header>
 

@@ -4,44 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Keuangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KeuanganController extends Controller
 {
     public function index()
     {
-        $transactions = Keuangan::with('user')->latest()->get();
-        $total_pemasukan = Keuangan::where('type', 'Pemasukan')->sum('amount');
-        $total_pengeluaran = Keuangan::where('type', 'Pengeluaran')->sum('amount');
-        $saldo = $total_pemasukan - $total_pengeluaran;
+        $keuangans = Keuangan::with('user')->latest()->get();
 
-        return view('keuangans.index', compact('transactions', 'total_pemasukan', 'total_pengeluaran', 'saldo'));
+        $totalPemasukan = Keuangan::where('type', 'Pemasukan')->sum('amount');
+        $totalPengeluaran = Keuangan::where('type', 'Pengeluaran')->sum('amount');
+        $saldo = $totalPemasukan - $totalPengeluaran;
+
+        return view('keuangans.index', compact(
+            'keuangans', 'totalPemasukan', 'totalPengeluaran', 'saldo'
+        ));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'type' => 'required|string|in:Pemasukan,Pengeluaran',
+        $data = $request->validate([
+            'type' => 'required|in:Pemasukan,Pengeluaran',
             'category' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
             'description' => 'nullable|string',
         ]);
 
-        Keuangan::create([
-            'type' => $request->type,
-            'category' => $request->category,
-            'amount' => $request->amount,
-            'date' => $request->date,
-            'description' => $request->description,
-            'user_id' => auth()->id(),
-        ]);
+        $data['user_id'] = Auth::id();
 
-        return redirect()->route('keuangans.index')->with('success', 'Transaksi keuangan berhasil dicatat.');
+        Keuangan::create($data);
+
+        return redirect()->route('keuangans.index')
+            ->with('success', 'Transaksi berhasil dicatat.');
     }
 
     public function destroy(Keuangan $keuangan)
     {
         $keuangan->delete();
-        return redirect()->route('keuangans.index')->with('success', 'Transaksi keuangan berhasil dihapus.');
+        return redirect()->route('keuangans.index')
+            ->with('success', 'Transaksi berhasil dihapus.');
     }
 }

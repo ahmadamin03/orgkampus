@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'description', 'date', 'location', 'status'])]
+#[Fillable(['organization_id', 'name', 'description', 'date', 'location', 'status'])]
 class Event extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     public function kepanitiaans()
     {

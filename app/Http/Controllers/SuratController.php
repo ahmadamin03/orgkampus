@@ -16,54 +16,37 @@ class SuratController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nomor_surat' => 'required|string|max:255',
-            'type' => 'required|string|in:Masuk,Keluar',
+        $data = $request->validate([
+            'nomor_surat' => 'required|string|max:100',
+            'type' => 'required|in:Masuk,Keluar',
             'perihal' => 'required|string|max:255',
             'pengirim_penerima' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5000',
             'description' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        $filePath = null;
         if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('surat', 'public');
+            $data['file_path'] = $request->file('file')->store('surat', 'public');
         }
 
-        Surat::create([
-            'nomor_surat' => $request->nomor_surat,
-            'type' => $request->type,
-            'perihal' => $request->perihal,
-            'pengirim_penerima' => $request->pengirim_penerima,
-            'tanggal' => $request->tanggal,
-            'file_path' => $filePath,
-            'description' => $request->description,
-        ]);
+        Surat::create($data);
 
-        return redirect()->route('surats.index')->with('success', 'Surat berhasil diarsipkan.');
+        return redirect()->route('surats.index')
+            ->with('success', 'Surat berhasil diarsipkan.');
     }
 
     public function update(Request $request, Surat $surat)
     {
-        $request->validate([
-            'nomor_surat' => 'required|string|max:255',
-            'type' => 'required|string|in:Masuk,Keluar',
+        $data = $request->validate([
+            'nomor_surat' => 'required|string|max:100',
+            'type' => 'required|in:Masuk,Keluar',
             'perihal' => 'required|string|max:255',
             'pengirim_penerima' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5000',
             'description' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
-
-        $data = [
-            'nomor_surat' => $request->nomor_surat,
-            'type' => $request->type,
-            'perihal' => $request->perihal,
-            'pengirim_penerima' => $request->pengirim_penerima,
-            'tanggal' => $request->tanggal,
-            'description' => $request->description,
-        ];
 
         if ($request->hasFile('file')) {
             if ($surat->file_path) {
@@ -74,7 +57,8 @@ class SuratController extends Controller
 
         $surat->update($data);
 
-        return redirect()->route('surats.index')->with('success', 'Surat berhasil diperbarui.');
+        return redirect()->route('surats.index')
+            ->with('success', 'Surat berhasil diperbarui.');
     }
 
     public function destroy(Surat $surat)
@@ -84,6 +68,7 @@ class SuratController extends Controller
         }
         $surat->delete();
 
-        return redirect()->route('surats.index')->with('success', 'Surat berhasil dihapus.');
+        return redirect()->route('surats.index')
+            ->with('success', 'Surat berhasil dihapus.');
     }
 }

@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'description', 'start_date', 'end_date', 'budget', 'status'])]
+#[Fillable(['organization_id', 'name', 'description', 'start_date', 'end_date', 'budget', 'status'])]
 class Proker extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     public function tugas()
     {
