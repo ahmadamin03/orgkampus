@@ -1,10 +1,3 @@
-FROM node:22-alpine AS node
-WORKDIR /app
-COPY package.json vite.config.js ./
-RUN npm install
-COPY resources/ resources/
-RUN npm run build
-
 FROM composer:latest AS composer
 WORKDIR /app
 COPY composer.json composer.lock ./
@@ -15,7 +8,6 @@ RUN apk add --no-cache nginx supervisor linux-headers \
     && docker-php-ext-install pdo pdo_mysql
 
 COPY --from=composer /app/vendor/ /app/vendor/
-COPY --from=node /app/public/build/ /app/public/build/
 COPY . /app/
 
 RUN rm -f /app/bootstrap/cache/packages.php /app/bootstrap/cache/services.php \
