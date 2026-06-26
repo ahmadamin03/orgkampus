@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -17,7 +18,7 @@ class EventController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'status' => 'required|string|max:50',
@@ -31,9 +32,13 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
+        if ($event->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'status' => 'required|string|max:50',
@@ -47,6 +52,10 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
+        if ($event->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $event->delete();
         return redirect()->route('events.index')
             ->with('success', 'Event berhasil dihapus.');

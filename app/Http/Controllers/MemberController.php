@@ -21,12 +21,12 @@ class MemberController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'nim' => 'nullable|string|max:50',
+            'nim' => 'nullable|string|max:50|unique:users,nim',
             'phone' => 'nullable|string|max:20',
             'role_organisasi' => 'required|string|max:100',
             'departemen' => 'nullable|string|max:100',
             'status' => 'required|in:Aktif,Nonaktif',
-            'password' => 'required|min:6',
+            'password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
         ]);
 
         $data['password'] = Hash::make($data['password']);
@@ -55,12 +55,12 @@ class MemberController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'nim' => 'nullable|string|max:50',
+            'nim' => 'nullable|string|max:50|unique:users,nim,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'role_organisasi' => 'required|string|max:100',
             'departemen' => 'nullable|string|max:100',
             'status' => 'required|in:Aktif,Nonaktif',
-            'password' => 'nullable|min:6',
+            'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
         ]);
 
         if ($data['password'] ?? false) {

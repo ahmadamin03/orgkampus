@@ -149,6 +149,13 @@
                 <form action="{{ route('login.process') }}" method="POST" class="space-y-5">
                     @csrf
 
+                    @if ($errors->any())
+                        <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-start gap-3">
+                            <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+                            <span>{{ $errors->first('email') }}</span>
+                        </div>
+                    @endif
+
                     <!-- Email input -->
                     <div>
                         <label class="block text-xs sm:text-sm font-semibold text-zinc-300 mb-2">

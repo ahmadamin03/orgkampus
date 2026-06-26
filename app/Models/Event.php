@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['organization_id', 'name', 'description', 'date', 'location', 'status'])]
+#[Fillable(['name', 'description', 'date', 'location', 'status'])]
 class Event extends Model
 {
     use HasFactory, TenantScoped;

@@ -20,17 +20,21 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
-    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:5,1')
+        ->name('login.process');
 
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
 
-    Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+    Route::post('/register', [AuthController::class, 'register'])
+        ->middleware('throttle:5,30')
+        ->name('register.process');
 });
 
 // Authenticated routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'throttle:60,1'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

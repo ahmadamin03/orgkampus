@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['organization_id', 'event_id', 'user_id', 'role'])]
+#[Fillable(['event_id', 'user_id', 'role'])]
 class Kepanitiaan extends Model
 {
     use HasFactory, TenantScoped;

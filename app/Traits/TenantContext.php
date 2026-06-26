@@ -2,24 +2,22 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Context;
 
 class TenantContext
 {
-    protected static ?int $organizationId = null;
-
     public static function setOrganizationId(?int $id): void
     {
-        static::$organizationId = $id;
+        Context::add('organization_id', $id);
     }
 
     public static function getOrganizationId(): ?int
     {
-        return static::$organizationId ?? Auth::user()?->organization_id;
+        return Context::get('organization_id');
     }
 
     public static function clear(): void
     {
-        static::$organizationId = null;
+        Context::add('organization_id', null);
     }
 }

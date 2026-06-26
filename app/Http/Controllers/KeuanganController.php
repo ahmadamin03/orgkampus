@@ -26,9 +26,9 @@ class KeuanganController extends Controller
         $data = $request->validate([
             'type' => 'required|in:Pemasukan,Pengeluaran',
             'category' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01|max:999999999.99',
             'date' => 'required|date',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
         ]);
 
         $data['user_id'] = Auth::id();
@@ -41,6 +41,10 @@ class KeuanganController extends Controller
 
     public function destroy(Keuangan $keuangan)
     {
+        if ($keuangan->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $keuangan->delete();
         return redirect()->route('keuangans.index')
             ->with('success', 'Transaksi berhasil dihapus.');

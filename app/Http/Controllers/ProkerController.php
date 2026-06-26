@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proker;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProkerController extends Controller
 {
@@ -16,8 +17,14 @@ class ProkerController extends Controller
 
     public function show(Proker $proker)
     {
+        if ($proker->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $proker->load('tugas.assignee');
-        $members = User::where('status', 'Aktif')->get();
+        $members = User::where('organization_id', Auth::user()->organization_id)
+            ->where('status', 'Aktif')
+            ->get();
         return view('prokers.show', compact('proker', 'members'));
     }
 
@@ -25,7 +32,7 @@ class ProkerController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'status' => 'required|string|max:50',
             'deadline' => 'nullable|date',
         ]);
@@ -41,9 +48,13 @@ class ProkerController extends Controller
 
     public function update(Request $request, Proker $proker)
     {
+        if ($proker->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'status' => 'required|string|max:50',
             'deadline' => 'nullable|date',
         ]);
@@ -59,6 +70,10 @@ class ProkerController extends Controller
 
     public function destroy(Proker $proker)
     {
+        if ($proker->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $proker->delete();
         return redirect()->route('prokers.index')
             ->with('success', 'Program kerja berhasil dihapus.');

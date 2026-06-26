@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Surat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
@@ -22,7 +23,7 @@ class SuratController extends Controller
             'perihal' => 'required|string|max:255',
             'pengirim_penerima' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
@@ -38,13 +39,17 @@ class SuratController extends Controller
 
     public function update(Request $request, Surat $surat)
     {
+        if ($surat->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         $data = $request->validate([
             'nomor_surat' => 'required|string|max:100',
             'type' => 'required|in:Masuk,Keluar',
             'perihal' => 'required|string|max:255',
             'pengirim_penerima' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:10000',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
@@ -63,6 +68,10 @@ class SuratController extends Controller
 
     public function destroy(Surat $surat)
     {
+        if ($surat->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+
         if ($surat->file_path) {
             Storage::disk('public')->delete($surat->file_path);
         }

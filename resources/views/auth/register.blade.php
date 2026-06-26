@@ -107,6 +107,19 @@
                 <form action="{{ route('register.process') }}" method="POST" class="space-y-4">
                     @csrf
 
+                    @if ($errors->any())
+                        <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                            <div class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+                                <div class="space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <p>{{ $error }}</p>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div>
                         <label class="block text-xs sm:text-sm font-semibold text-zinc-300 mb-2">Nama Organisasi</label>
                         <div class="relative">
@@ -143,7 +156,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                                 <i class="fa-solid fa-lock"></i>
                             </div>
-                            <input type="password" name="password" id="password" class="w-full bg-black/40 border border-zinc-800 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 text-white rounded-xl pl-10 pr-11 py-3 text-sm placeholder-zinc-600 outline-none transition-all duration-200" placeholder="Minimal 6 karakter" required>
+                            <input type="password" name="password" id="password" class="w-full bg-black/40 border border-zinc-800 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 text-white rounded-xl pl-10 pr-11 py-3 text-sm placeholder-zinc-600 outline-none transition-all duration-200" placeholder="Min. 8 karakter, huruf besar/kecil & angka" required>
                             <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-brand-500 transition-colors">
                                 <i class="fa-solid fa-eye text-sm" id="eyeIcon"></i>
                             </button>

@@ -9,7 +9,7 @@
     <div class="p-6 border-b border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
             <h3 class="text-lg font-bold text-white">Arsip Surat Organisasi</h3>
-            <p class="text-xs text-zinc-500 mt-1">Total arsip: {{ $surats->count() }} dokumen terdaftar</p>
+            <p class="text-xs text-zinc-500 mt-1">Total arsip: {{ $surats ? $surats->count() : 0 }} dokumen terdaftar</p>
         </div>
         <button onclick="toggleModal('create-surat-modal')" class="bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/10 hover:shadow-brand-500/20 transform hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center gap-2 text-sm">
             <i class="fa-solid fa-file-arrow-up text-xs"></i>

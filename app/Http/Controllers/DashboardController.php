@@ -7,27 +7,33 @@ use App\Models\Keuangan;
 use App\Models\Proker;
 use App\Models\Surat;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $totalMembers = User::count();
-        $totalProkers = Proker::count();
-        $totalEvents = Event::count();
-        $totalSurats = Surat::count();
+        $orgId = Auth::user()->organization_id;
 
-        $pemasukan = Keuangan::where('type', 'Pemasukan')->sum('amount');
-        $pengeluaran = Keuangan::where('type', 'Pengeluaran')->sum('amount');
+        $totalMembers = User::where('organization_id', $orgId)->count();
+        $totalProkers = Proker::where('organization_id', $orgId)->count();
+        $totalEvents = Event::where('organization_id', $orgId)->count();
+        $totalSurats = Surat::where('organization_id', $orgId)->count();
+
+        $pemasukan = Keuangan::where('organization_id', $orgId)
+            ->where('type', 'Pemasukan')->sum('amount');
+        $pengeluaran = Keuangan::where('organization_id', $orgId)
+            ->where('type', 'Pengeluaran')->sum('amount');
         $saldo = $pemasukan - $pengeluaran;
 
         $recentTransactions = Keuangan::with('user')
+            ->where('organization_id', $orgId)
             ->latest()
             ->take(5)
             ->get();
 
-        $recentLetters = Surat::latest()->take(5)->get();
+        $recentLetters = Surat::where('organization_id', $orgId)
+            ->latest()->take(5)->get();
 
         return view('dashboard.index', compact(
             'totalMembers', 'totalProkers', 'totalEvents', 'totalSurats',
