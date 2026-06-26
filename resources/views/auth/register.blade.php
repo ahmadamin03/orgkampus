@@ -13,36 +13,8 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c',
-                            500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12', 950: '#431407',
-                        },
-                        darkbg: { 950: '#09090b', 900: '#121214', 800: '#1e1e24', 700: '#2a2a30' }
-                    },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'pulse-glow': 'pulseGlow 5s infinite alternate ease-in-out',
-                    },
-                    keyframes: {
-                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-                        pulseGlow: {
-                            '0%': { opacity: '0.2', transform: 'scale(1) translate(0px, 0px)' },
-                            '50%': { opacity: '0.4', transform: 'scale(1.08) translate(10px, -10px)' },
-                            '100%': { opacity: '0.2', transform: 'scale(1) translate(0px, 0px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    @include('components.tailwind-config')
+
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #09090b; }
         ::-webkit-scrollbar { width: 6px; }
@@ -160,6 +132,15 @@
                             <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-brand-500 transition-colors">
                                 <i class="fa-solid fa-eye text-sm" id="eyeIcon"></i>
                             </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-semibold text-zinc-300 mb-2">Konfirmasi Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <input type="password" name="password_confirmation" class="w-full bg-black/40 border border-zinc-800 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 text-white rounded-xl pl-10 pr-4 py-3 text-sm placeholder-zinc-600 outline-none transition-all duration-200" placeholder="Ketik ulang password" required>
                         </div>
                     </div>
 

@@ -10,8 +10,16 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::with('kepanitiaans.user')->latest()->get();
+        $events = Event::with('kepanitiaans.user')->latest()->paginate(12);
         return view('events.index', compact('events'));
+    }
+
+    public function show(Event $event)
+    {
+        if ($event->organization_id !== Auth::user()->organization_id) {
+            abort(404);
+        }
+        return response()->json($event);
     }
 
     public function store(Request $request)

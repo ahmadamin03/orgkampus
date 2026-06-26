@@ -13,75 +13,17 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff7ed',
-                            100: '#ffedd5',
-                            200: '#fed7aa',
-                            300: '#fdba74',
-                            400: '#fb923c',
-                            500: '#f97316', // Orange
-                            600: '#ea580c',
-                            700: '#c2410c',
-                            800: '#9a3412',
-                            900: '#7c2d12',
-                            950: '#431407',
-                        },
-                        darkbg: {
-                            950: '#09090b', // Zinc-950
-                            900: '#121214', // Zinc-900 custom
-                            800: '#1e1e24', // Zinc-800 custom
-                            700: '#2a2a30',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'pulse-glow': 'pulseGlow 5s infinite alternate ease-in-out',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        pulseGlow: {
-                            '0%': { opacity: '0.2', transform: 'scale(1) translate(0px, 0px)' },
-                            '50%': { opacity: '0.4', transform: 'scale(1.08) translate(10px, -10px)' },
-                            '100%': { opacity: '0.2', transform: 'scale(1) translate(0px, 0px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    @include('components.tailwind-config')
 
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #09090b;
         }
-        /* Custom scrollbar just in case */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #09090b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a30;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ea580c;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #2a2a30; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
     </style>
 </head>
 <body class="h-full bg-darkbg-950 text-zinc-100 flex items-stretch overflow-hidden">
@@ -216,9 +158,7 @@
                             <span class="text-xs text-zinc-400 hover:text-zinc-300 transition-colors">Ingat saya</span>
                         </label>
 
-                        <a href="#" class="text-xs text-brand-500 hover:text-brand-400 font-semibold transition-colors">
-                            Lupa Password?
-                        </a>
+                        <span class="text-xs text-zinc-600">Fitur reset password segera hadir</span>
                     </div>
 
                     <!-- Submit Button -->

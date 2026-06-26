@@ -11,7 +11,7 @@ class ProkerController extends Controller
 {
     public function index()
     {
-        $prokers = Proker::with('tugas')->latest()->get();
+        $prokers = Proker::with('tugas')->latest()->paginate(12);
         return view('prokers.index', compact('prokers'));
     }
 
@@ -34,11 +34,10 @@ class ProkerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
             'status' => 'required|string|max:50',
-            'deadline' => 'nullable|date',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'budget' => 'nullable|numeric|min:0',
         ]);
-
-        $data['end_date'] = $data['deadline'] ?? null;
-        unset($data['deadline']);
 
         Proker::create($data);
 
@@ -56,11 +55,10 @@ class ProkerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
             'status' => 'required|string|max:50',
-            'deadline' => 'nullable|date',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'budget' => 'nullable|numeric|min:0',
         ]);
-
-        $data['end_date'] = $data['deadline'] ?? null;
-        unset($data['deadline']);
 
         $proker->update($data);
 

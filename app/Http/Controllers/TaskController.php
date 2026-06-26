@@ -18,7 +18,7 @@ class TaskController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
-            'assigned_to' => 'nullable|exists:users,id',
+            'assigned_to' => 'nullable|exists:users,id,organization_id,' . Auth::user()->organization_id,
             'due_date' => 'nullable|date',
             'status' => 'required|in:Pending,Ongoing,Completed',
         ]);

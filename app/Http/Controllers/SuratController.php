@@ -11,7 +11,7 @@ class SuratController extends Controller
 {
     public function index()
     {
-        $surats = Surat::latest()->get();
+        $surats = Surat::latest()->paginate(20);
         return view('surats.index', compact('surats'));
     }
 

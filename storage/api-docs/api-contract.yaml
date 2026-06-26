@@ -1,0 +1,1835 @@
+openapi: "3.0.3"
+info:
+  title: OrgKampus API
+  description: |
+    API RESTful untuk sistem manajemen organisasi kampus.
+    Mendukung manajemen anggota, program kerja, event, surat, keuangan, dan tugas.
+
+    **Autentikasi:**
+    - Daftar organisasi baru via `POST /api/register`
+    - Login via `POST /api/login`
+    - Kirim token pada setiap request: `Authorization: Bearer {token}`
+
+    **Base URL:** `/api`
+  version: "1.1.0"
+  contact:
+    name: OrgKampus
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local development
+  - url: https://orgkampus.test/api
+    description: Development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+
+  schemas:
+    # ── WRAPPER ─────────────────────────────
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        message:
+          type: string
+        data: {}
+
+    PaginatedData:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        links:
+          type: object
+          properties:
+            first:
+              type: string
+              nullable: true
+            last:
+              type: string
+              nullable: true
+            prev:
+              type: string
+              nullable: true
+            next:
+              type: string
+              nullable: true
+        meta:
+          type: object
+          properties:
+            current_page:
+              type: integer
+            from:
+              type: integer
+              nullable: true
+            last_page:
+              type: integer
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    nullable: true
+                  label:
+                    type: string
+                  active:
+                    type: boolean
+            path:
+              type: string
+            per_page:
+              type: integer
+            to:
+              type: integer
+              nullable: true
+            total:
+              type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    # ── AUTH ─────────────────────────────────
+    AuthUserObject:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        organization_id:
+          type: integer
+        role_organisasi:
+          type: string
+        nim:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        departemen:
+          type: string
+          nullable: true
+        status:
+          type: string
+
+    AuthResponseData:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "1|abc123def456..."
+        user:
+          $ref: "#/components/schemas/AuthUserObject"
+
+    OrganizationObject:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+
+    UserWithOrganization:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        nim:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        role_organisasi:
+          type: string
+        departemen:
+          type: string
+          nullable: true
+        status:
+          type: string
+        organization_id:
+          type: integer
+        organization:
+          $ref: "#/components/schemas/OrganizationObject"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── MEMBER ───────────────────────────────
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        nim:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        role_organisasi:
+          type: string
+        departemen:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [Aktif, Nonaktif]
+        organization_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── PROKER ───────────────────────────────
+    Proker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        budget:
+          type: number
+          format: float
+        status:
+          type: string
+          enum: [Planning, Active, Completed, Cancelled]
+        organization_id:
+          type: integer
+        tugas:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tugas"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── EVENT ────────────────────────────────
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        location:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [Planning, Active, Completed, Cancelled]
+        organization_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── SURAT ────────────────────────────────
+    Surat:
+      type: object
+      properties:
+        id:
+          type: integer
+        nomor_surat:
+          type: string
+        type:
+          type: string
+          enum: [Surat Masuk, Surat Keluar]
+        perihal:
+          type: string
+        pengirim_penerima:
+          type: string
+        tanggal:
+          type: string
+          format: date
+        file_path:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        organization_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # ── KEUANGAN ─────────────────────────────
+    Keuangan:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [Pemasukan, Pengeluaran]
+        category:
+          type: string
+        amount:
+          type: number
+          format: float
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        user_id:
+          type: integer
+        user:
+          $ref: "#/components/schemas/Member"
+        organization_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    KeuanganSummary:
+      type: object
+      properties:
+        total_pemasukan:
+          type: number
+          format: float
+        total_pengeluaran:
+          type: number
+          format: float
+        saldo:
+          type: number
+          format: float
+
+    KeuanganIndexData:
+      type: object
+      properties:
+        transactions:
+          $ref: "#/components/schemas/PaginatedData"
+        summary:
+          $ref: "#/components/schemas/KeuanganSummary"
+
+    # ── TUGAS ────────────────────────────────
+    Tugas:
+      type: object
+      properties:
+        id:
+          type: integer
+        proker_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        assigned_to:
+          type: integer
+        assignee:
+          $ref: "#/components/schemas/Member"
+        due_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [Pending, In Progress, Completed, Cancelled]
+        organization_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+paths:
+  # ══════════════════════════════════════════
+  #  AUTH
+  # ══════════════════════════════════════════
+  /register:
+    post:
+      tags: [Autentikasi]
+      summary: Registrasi organisasi baru
+      description: Membuat organisasi baru dan user pertama sebagai Ketua. Mengembalikan token Sanctum.
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - organization_name
+                - name
+                - email
+                - password
+                - password_confirmation
+              properties:
+                organization_name:
+                  type: string
+                  maxLength: 255
+                  example: "Himpunan Mahasiswa Teknik"
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "john@kampus.ac.id"
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  description: "Min 8 karakter, harus mengandung huruf besar, huruf kecil, dan angka"
+                  example: "Password123"
+                password_confirmation:
+                  type: string
+                  example: "Password123"
+      responses:
+        "201":
+          description: Registrasi berhasil
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/AuthResponseData"
+        "422":
+          description: Validasi gagal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /login:
+    post:
+      tags: [Autentikasi]
+      summary: Login pengguna
+      description: Login dengan email dan password. Mengembalikan token Sanctum.
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "john@kampus.ac.id"
+                password:
+                  type: string
+                  format: password
+                  example: "Password123"
+                device_name:
+                  type: string
+                  maxLength: 255
+                  description: "Nama perangkat (opsional, untuk identifikasi token)"
+                  example: "mobile-app"
+      responses:
+        "200":
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/AuthResponseData"
+        "422":
+          description: Email atau password salah
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /logout:
+    post:
+      tags: [Autentikasi]
+      summary: Logout (revoke token)
+      description: Menghapus token Sanctum yang sedang digunakan.
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout berhasil
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "401":
+          description: Token tidak valid / tidak dikirim
+
+  /user:
+    get:
+      tags: [Autentikasi]
+      summary: Data pengguna saat ini
+      description: Mengembalikan data user lengkap beserta data organisasi.
+      operationId: getUser
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Data pengguna
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/UserWithOrganization"
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  MEMBERS
+  # ══════════════════════════════════════════
+  /members:
+    get:
+      tags: [Anggota]
+      summary: Daftar anggota
+      description: Mengembalikan daftar anggota organisasi yang sudah terautentikasi (ter-scope oleh organisasi).
+      operationId: listMembers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: "Nomor halaman"
+      responses:
+        "200":
+          description: Daftar anggota (ter-paginate)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/PaginatedData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Anggota]
+      summary: Tambah anggota baru
+      description: Menambahkan anggota baru ke dalam organisasi.
+      operationId: createMember
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - role_organisasi
+                - status
+                - password
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "Budi Santoso"
+                email:
+                  type: string
+                  format: email
+                  example: "budi@kampus.ac.id"
+                nim:
+                  type: string
+                  maxLength: 50
+                  description: "Nomor Induk Mahasiswa (opsional, unique)"
+                  example: "G64190001"
+                phone:
+                  type: string
+                  maxLength: 20
+                  example: "08123456789"
+                role_organisasi:
+                  type: string
+                  maxLength: 100
+                  example: "Sekretaris"
+                departemen:
+                  type: string
+                  maxLength: 100
+                  example: "Divisi Acara"
+                status:
+                  type: string
+                  enum: [Aktif, Nonaktif]
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  description: "Min 8 karakter, harus mengandung huruf besar, huruf kecil, dan angka"
+                  example: "MemberPass1"
+      responses:
+        "201":
+          description: Anggota berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Member"
+        "422":
+          description: Validasi gagal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Tidak terautentikasi
+
+  /members/{id}:
+    get:
+      tags: [Anggota]
+      summary: Detail anggota
+      description: Mengembalikan detail anggota berdasarkan ID.
+      operationId: getMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "ID anggota"
+      responses:
+        "200":
+          description: Detail anggota
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Member"
+        "404":
+          description: Anggota tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Anggota]
+      summary: Update anggota
+      description: Memperbarui data anggota.
+      operationId: updateMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - role_organisasi
+                - status
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                email:
+                  type: string
+                  format: email
+                nim:
+                  type: string
+                  maxLength: 50
+                phone:
+                  type: string
+                  maxLength: 20
+                role_organisasi:
+                  type: string
+                  maxLength: 100
+                departemen:
+                  type: string
+                  maxLength: 100
+                status:
+                  type: string
+                  enum: [Aktif, Nonaktif]
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  description: "Opsional. Jika tidak dikirim, password tidak diubah."
+      responses:
+        "200":
+          description: Anggota berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Member"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Anggota tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Anggota]
+      summary: Hapus anggota
+      description: Menghapus anggota dari organisasi.
+      operationId: deleteMember
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Anggota berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Anggota tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  PROKERS
+  # ══════════════════════════════════════════
+  /prokers:
+    get:
+      tags: [Program Kerja]
+      summary: Daftar program kerja
+      description: Mengembalikan daftar program kerja (ter-scope oleh organisasi). Setiap proker menyertakan daftar tugasnya.
+      operationId: listProkers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Daftar proker (ter-paginate)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/PaginatedData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Program Kerja]
+      summary: Tambah program kerja baru
+      description: Menambahkan proker baru beserta data tugas (opsional).
+      operationId: createProker
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - start_date
+                - end_date
+                - status
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "PKKMB 2026"
+                description:
+                  type: string
+                  maxLength: 10000
+                  example: "Program kerja tahunan untuk menyambut mahasiswa baru."
+                start_date:
+                  type: string
+                  format: date
+                  example: "2026-08-01"
+                end_date:
+                  type: string
+                  format: date
+                  example: "2026-08-31"
+                budget:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 999999999.99
+                  example: 15000000
+                status:
+                  type: string
+                  enum: [Planning, Active, Completed, Cancelled]
+      responses:
+        "201":
+          description: Proker berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Proker"
+        "422":
+          description: Validasi gagal
+        "401":
+          description: Tidak terautentikasi
+
+  /prokers/{id}:
+    get:
+      tags: [Program Kerja]
+      summary: Detail program kerja
+      description: Mengembalikan detail proker beserta daftar tugas.
+      operationId: getProker
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detail proker
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Proker"
+        "404":
+          description: Proker tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Program Kerja]
+      summary: Update program kerja
+      description: Memperbarui data program kerja.
+      operationId: updateProker
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - start_date
+                - end_date
+                - status
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                  maxLength: 10000
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+                budget:
+                  type: number
+                  format: float
+                  minimum: 0
+                status:
+                  type: string
+                  enum: [Planning, Active, Completed, Cancelled]
+      responses:
+        "200":
+          description: Proker berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Proker"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Proker tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Program Kerja]
+      summary: Hapus program kerja
+      description: Menghapus proker beserta seluruh tugas terkait (cascade).
+      operationId: deleteProker
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Proker berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Proker tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  EVENTS
+  # ══════════════════════════════════════════
+  /events:
+    get:
+      tags: [Kegiatan]
+      summary: Daftar event
+      description: Mengembalikan daftar event/kegiatan organisasi.
+      operationId: listEvents
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Daftar event (ter-paginate)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/PaginatedData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Kegiatan]
+      summary: Tambah event baru
+      description: Menambahkan event/kegiatan baru.
+      operationId: createEvent
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - date
+                - status
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "Seminar Startup 2026"
+                description:
+                  type: string
+                  maxLength: 10000
+                  example: "Seminar tentang kewirausahaan digital."
+                date:
+                  type: string
+                  format: date
+                  example: "2026-09-15"
+                location:
+                  type: string
+                  maxLength: 255
+                  example: "Gedung Serbaguna Kampus"
+                status:
+                  type: string
+                  enum: [Planning, Active, Completed, Cancelled]
+      responses:
+        "201":
+          description: Event berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Event"
+        "422":
+          description: Validasi gagal
+        "401":
+          description: Tidak terautentikasi
+
+  /events/{id}:
+    get:
+      tags: [Kegiatan]
+      summary: Detail event
+      description: Mengembalikan detail event berdasarkan ID.
+      operationId: getEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detail event
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Event"
+        "404":
+          description: Event tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Kegiatan]
+      summary: Update event
+      description: Memperbarui data event.
+      operationId: updateEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - date
+                - status
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                  maxLength: 10000
+                date:
+                  type: string
+                  format: date
+                location:
+                  type: string
+                  maxLength: 255
+                status:
+                  type: string
+                  enum: [Planning, Active, Completed, Cancelled]
+      responses:
+        "200":
+          description: Event berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Event"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Event tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Kegiatan]
+      summary: Hapus event
+      description: Menghapus event beserta seluruh kepanitiaan terkait (cascade).
+      operationId: deleteEvent
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Event tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  SURATS
+  # ══════════════════════════════════════════
+  /surats:
+    get:
+      tags: [Surat]
+      summary: Daftar surat
+      description: Mengembalikan daftar surat (masuk/keluar).
+      operationId: listSurats
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Daftar surat (ter-paginate)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/PaginatedData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Surat]
+      summary: Tambah surat baru
+      description: Menambahkan surat baru. Upload file bersifat opsional.
+      operationId: createSurat
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - nomor_surat
+                - type
+                - perihal
+                - pengirim_penerima
+                - tanggal
+              properties:
+                nomor_surat:
+                  type: string
+                  maxLength: 255
+                  example: "SRT/ORG/2026/001"
+                type:
+                  type: string
+                  enum: [Surat Masuk, Surat Keluar]
+                perihal:
+                  type: string
+                  maxLength: 255
+                  example: "Permohonan Sponsor Acara"
+                pengirim_penerima:
+                  type: string
+                  maxLength: 255
+                  description: "Pengirim (untuk Surat Masuk) atau Penerima (untuk Surat Keluar)"
+                  example: "PT. Mitra Sukses"
+                tanggal:
+                  type: string
+                  format: date
+                  example: "2026-06-01"
+                description:
+                  type: string
+                  maxLength: 10000
+                file:
+                  type: string
+                  format: binary
+                  description: "File surat (PDF/DOC/JPG/PNG, max 2MB)"
+      responses:
+        "201":
+          description: Surat berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Surat"
+        "422":
+          description: Validasi gagal
+        "401":
+          description: Tidak terautentikasi
+
+  /surats/{id}:
+    get:
+      tags: [Surat]
+      summary: Detail surat
+      description: Mengembalikan detail surat berdasarkan ID.
+      operationId: getSurat
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detail surat
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Surat"
+        "404":
+          description: Surat tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Surat]
+      summary: Update surat
+      description: Memperbarui data surat. File lama akan dihapus jika diganti.
+      operationId: updateSurat
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - nomor_surat
+                - type
+                - perihal
+                - pengirim_penerima
+                - tanggal
+              properties:
+                nomor_surat:
+                  type: string
+                  maxLength: 255
+                type:
+                  type: string
+                  enum: [Surat Masuk, Surat Keluar]
+                perihal:
+                  type: string
+                  maxLength: 255
+                pengirim_penerima:
+                  type: string
+                  maxLength: 255
+                tanggal:
+                  type: string
+                  format: date
+                description:
+                  type: string
+                  maxLength: 10000
+                file:
+                  type: string
+                  format: binary
+                  description: "File baru (akan mengganti file lama)"
+      responses:
+        "200":
+          description: Surat berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Surat"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Surat tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Surat]
+      summary: Hapus surat
+      description: Menghapus surat beserta file terkait dari storage.
+      operationId: deleteSurat
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Surat berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Surat tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  KEUANGANS
+  # ══════════════════════════════════════════
+  /keuangans:
+    get:
+      tags: [Keuangan]
+      summary: Daftar transaksi + ringkasan
+      description: Mengembalikan daftar transaksi keuangan beserta ringkasan (total pemasukan, pengeluaran, saldo).
+      operationId: listKeuangans
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Daftar transaksi dan ringkasan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/KeuanganIndexData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Keuangan]
+      summary: Catat transaksi baru
+      description: Mencatat pemasukan atau pengeluaran baru. User_id diisi otomatis dari token.
+      operationId: createKeuangan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - category
+                - amount
+                - date
+              properties:
+                type:
+                  type: string
+                  enum: [Pemasukan, Pengeluaran]
+                category:
+                  type: string
+                  maxLength: 255
+                  example: "Kas Anggota"
+                amount:
+                  type: number
+                  format: float
+                  minimum: 0.01
+                  example: 500000
+                date:
+                  type: string
+                  format: date
+                  example: "2026-06-01"
+                description:
+                  type: string
+                  maxLength: 10000
+                  example: "Pembayaran kas bulan Juni"
+      responses:
+        "201":
+          description: Transaksi berhasil dicatat
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Keuangan"
+        "422":
+          description: Validasi gagal
+        "401":
+          description: Tidak terautentikasi
+
+  /keuangans/{id}:
+    get:
+      tags: [Keuangan]
+      summary: Detail transaksi
+      description: Mengembalikan detail transaksi keuangan.
+      operationId: getKeuangan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detail transaksi
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Keuangan"
+        "404":
+          description: Transaksi tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Keuangan]
+      summary: Update transaksi
+      description: Memperbarui data transaksi keuangan.
+      operationId: updateKeuangan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - category
+                - amount
+                - date
+              properties:
+                type:
+                  type: string
+                  enum: [Pemasukan, Pengeluaran]
+                category:
+                  type: string
+                  maxLength: 255
+                amount:
+                  type: number
+                  format: float
+                  minimum: 0.01
+                date:
+                  type: string
+                  format: date
+                description:
+                  type: string
+                  maxLength: 10000
+      responses:
+        "200":
+          description: Transaksi berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Keuangan"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Transaksi tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Keuangan]
+      summary: Hapus transaksi
+      description: Menghapus transaksi keuangan.
+      operationId: deleteKeuangan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Transaksi berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Transaksi tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+  # ══════════════════════════════════════════
+  #  TUGAS
+  # ══════════════════════════════════════════
+  /tugas:
+    get:
+      tags: [Tugas]
+      summary: Daftar tugas
+      description: Mengembalikan daftar tugas dari seluruh proker (ter-scope organisasi).
+      operationId: listTugas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Daftar tugas (ter-paginate)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/PaginatedData"
+        "401":
+          description: Tidak terautentikasi
+
+    post:
+      tags: [Tugas]
+      summary: Tambah tugas baru
+      description: Menambahkan tugas ke dalam proker. `assigned_to` harus anggota dalam organisasi yang sama.
+      operationId: createTugas
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proker_id
+                - title
+                - assigned_to
+                - due_date
+                - status
+              properties:
+                proker_id:
+                  type: integer
+                  example: 1
+                title:
+                  type: string
+                  maxLength: 255
+                  example: "Membuat proposal acara"
+                description:
+                  type: string
+                  maxLength: 10000
+                assigned_to:
+                  type: integer
+                  description: "User ID (harus dalam organisasi yang sama)"
+                  example: 2
+                due_date:
+                  type: string
+                  format: date
+                  example: "2026-07-15"
+                status:
+                  type: string
+                  enum: [Pending, In Progress, Completed, Cancelled]
+      responses:
+        "201":
+          description: Tugas berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Tugas"
+        "422":
+          description: Validasi gagal
+        "401":
+          description: Tidak terautentikasi
+
+  /tugas/{id}:
+    get:
+      tags: [Tugas]
+      summary: Detail tugas
+      description: Mengembalikan detail tugas.
+      operationId: getTugas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Detail tugas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Tugas"
+        "404":
+          description: Tugas tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    put:
+      tags: [Tugas]
+      summary: Update tugas
+      description: Memperbarui data tugas.
+      operationId: updateTugas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proker_id
+                - title
+                - assigned_to
+                - due_date
+                - status
+              properties:
+                proker_id:
+                  type: integer
+                title:
+                  type: string
+                  maxLength: 255
+                description:
+                  type: string
+                  maxLength: 10000
+                assigned_to:
+                  type: integer
+                  description: "User ID (harus dalam organisasi yang sama)"
+                due_date:
+                  type: string
+                  format: date
+                status:
+                  type: string
+                  enum: [Pending, In Progress, Completed, Cancelled]
+      responses:
+        "200":
+          description: Tugas berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Tugas"
+        "422":
+          description: Validasi gagal
+        "404":
+          description: Tugas tidak ditemukan
+        "401":
+          description: Tidak terautentikasi
+
+    delete:
+      tags: [Tugas]
+      summary: Hapus tugas
+      description: Menghapus tugas dari proker.
+      operationId: deleteTugas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Tugas berhasil dihapus
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: "null"
+        "404":
+          description: Tugas tidak ditemukan
+        "401":
+          description: Tidak terautentikasi

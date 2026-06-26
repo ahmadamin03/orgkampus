@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
     })->name('login');
 
     Route::post('/login', [AuthController::class, 'login'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:5,1,login')
         ->name('login.process');
 
     Route::get('/register', function () {
@@ -29,7 +29,7 @@ Route::middleware('guest')->group(function () {
     })->name('register');
 
     Route::post('/register', [AuthController::class, 'register'])
-        ->middleware('throttle:5,30')
+        ->middleware('throttle:5,30,register')
         ->name('register.process');
 });
 
@@ -60,6 +60,7 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
 
     // Events
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
@@ -72,6 +73,12 @@ Route::middleware(['auth', 'throttle:60,1'])->group(function () {
 
     // Keuangans
     Route::get('/keuangans', [KeuanganController::class, 'index'])->name('keuangans.index');
+    Route::get('/keuangans/{keuangan}', [KeuanganController::class, 'show'])->name('keuangans.show');
     Route::post('/keuangans', [KeuanganController::class, 'store'])->name('keuangans.store');
+    Route::put('/keuangans/{keuangan}', [KeuanganController::class, 'update'])->name('keuangans.update');
     Route::delete('/keuangans/{keuangan}', [KeuanganController::class, 'destroy'])->name('keuangans.destroy');
 });
+
+Route::get('/api/documentation', function () {
+    return view('api-docs', ['specPath' => asset('storage/api-docs/api-contract.yaml')]);
+})->name('api.docs');

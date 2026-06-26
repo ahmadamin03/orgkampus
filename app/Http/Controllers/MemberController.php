@@ -12,7 +12,7 @@ class MemberController extends Controller
     public function index()
     {
         $org = Auth::user()->organization;
-        $members = $org->users()->latest()->get();
+        $members = $org->users()->latest()->paginate(20);
         return view('members.index', compact('members'));
     }
 

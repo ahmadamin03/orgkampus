@@ -38,6 +38,9 @@
                 @endif
             </div>
             <div class="mt-4 pt-4 border-t border-zinc-900 flex items-center justify-end gap-2">
+                <button onclick="editEvent({{ $event->id }})" class="w-8 h-8 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-brand-500 hover:border-brand-500/30 transition-all" title="Edit">
+                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                </button>
                 <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Hapus event ini?')">
                     @csrf
                     @method('DELETE')
@@ -54,6 +57,26 @@
         </div>
         @endforelse
     </div>
+
+    @if ($events->hasPages())
+    <div class="flex items-center justify-between pt-4">
+        <div class="text-xs text-zinc-500">
+            Halaman {{ $events->currentPage() }} dari {{ $events->lastPage() }}
+        </div>
+        <div class="flex gap-2">
+            @if ($events->onFirstPage())
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-600 text-xs font-medium">Sebelumnya</span>
+            @else
+                <a href="{{ $events->previousPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-medium transition-colors">Sebelumnya</a>
+            @endif
+            @if ($events->hasMorePages())
+                <a href="{{ $events->nextPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-medium transition-colors">Selanjutnya</a>
+            @else
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-600 text-xs font-medium">Selanjutnya</span>
+            @endif
+        </div>
+    </div>
+    @endif
 </div>
 
 <!-- ================= CREATE EVENT MODAL ================= -->
@@ -107,10 +130,76 @@
     </div>
 </div>
 
+<!-- ================= EDIT EVENT MODAL ================= -->
+<div id="edit-event-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" onclick="toggleModal('edit-event-modal')"></div>
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-lg bg-darkbg-900 border border-zinc-800 rounded-2xl shadow-2xl p-6 sm:p-8 animate-fade-in-up">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4 mb-6">
+                <h3 class="text-lg font-bold text-white">Edit Event</h3>
+                <button onclick="toggleModal('edit-event-modal')" class="text-zinc-500 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="edit-event-form" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-2">Nama Event</label>
+                    <input type="text" name="name" id="edit-name" required class="w-full bg-zinc-950 border border-zinc-800 text-white text-sm rounded-xl px-4 py-2.5 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-2">Deskripsi Kegiatan</label>
+                    <textarea name="description" id="edit-description" rows="3" class="w-full bg-zinc-950 border border-zinc-800 text-white text-sm rounded-xl px-4 py-2.5 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-zinc-400 mb-2">Tanggal Pelaksanaan</label>
+                        <input type="date" name="date" id="edit-date" class="w-full bg-zinc-950 border border-zinc-800 text-white text-sm rounded-xl px-4 py-2.5 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-zinc-400 mb-2">Status</label>
+                        <select name="status" id="edit-status" required class="w-full bg-zinc-950 border border-zinc-800 text-white text-sm rounded-xl px-4 py-2.5 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all">
+                            <option value="Rencana">Rencana</option>
+                            <option value="Berjalan">Berjalan</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label class="block text-xs font-semibold text-zinc-400 mb-2">Tempat / Lokasi</label>
+                        <input type="text" name="location" id="edit-location" class="w-full bg-zinc-950 border border-zinc-800 text-white text-sm rounded-xl px-4 py-2.5 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800 mt-6">
+                    <button type="button" onclick="toggleModal('edit-event-modal')" class="bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors">Batal</button>
+                    <button type="submit" class="bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-brand-500/10 transition-all">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     function toggleModal(modalId) {
         const modal = document.getElementById(modalId);
         modal.classList.toggle('hidden');
+    }
+
+    function editEvent(id) {
+        fetch('/events/' + id)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('edit-name').value = data.name;
+                document.getElementById('edit-description').value = data.description || '';
+                document.getElementById('edit-date').value = data.date || '';
+                document.getElementById('edit-status').value = data.status;
+                document.getElementById('edit-location').value = data.location || '';
+                document.getElementById('edit-event-form').action = '/events/' + id;
+                toggleModal('edit-event-modal');
+            });
     }
 </script>
 @endsection

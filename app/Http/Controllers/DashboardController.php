@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Keuangan;
 use App\Models\Proker;
 use App\Models\Surat;
+use App\Models\Tugas;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,9 +36,16 @@ class DashboardController extends Controller
         $recentLetters = Surat::where('organization_id', $orgId)
             ->latest()->take(5)->get();
 
+        $activeTasks = Tugas::with(['proker', 'assignee'])
+            ->where('organization_id', $orgId)
+            ->where('status', 'Ongoing')
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('dashboard.index', compact(
             'totalMembers', 'totalProkers', 'totalEvents', 'totalSurats',
-            'saldo', 'recentTransactions', 'recentLetters'
+            'saldo', 'recentTransactions', 'recentLetters', 'activeTasks'
         ));
     }
 }

@@ -89,13 +89,6 @@
             </div>
             
             <div class="divide-y divide-zinc-900 overflow-hidden">
-                @php
-                    $activeTasks = \App\Models\Tugas::with(['proker', 'assignee'])
-                        ->where('status', 'Ongoing')
-                        ->latest()
-                        ->take(5)
-                        ->get();
-                @endphp
                 @forelse($activeTasks as $task)
                 <div class="py-3 flex items-center justify-between">
                     <div class="flex items-center gap-3 min-w-0">

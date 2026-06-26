@@ -13,66 +13,15 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff7ed',
-                            100: '#ffedd5',
-                            200: '#fed7aa',
-                            300: '#fdba74',
-                            400: '#fb923c',
-                            500: '#f97316',
-                            600: '#ea580c',
-                            700: '#c2410c',
-                            800: '#9a3412',
-                            900: '#7c2d12',
-                            950: '#431407',
-                        },
-                        darkbg: {
-                            950: '#09090b',
-                            900: '#121214',
-                            800: '#1e1e24',
-                            700: '#2a2a30',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 4s infinite alternate ease-in-out',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        pulseGlow: {
-                            '0%': { opacity: '0.4', transform: 'scale(1)' },
-                            '100%': { opacity: '0.8', transform: 'scale(1.1)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    @include('components.tailwind-config')
+
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #09090b; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #09090b; }
         ::-webkit-scrollbar-thumb { background: #2a2a30; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
-        
+
         .glass-nav {
             background: rgba(9, 9, 11, 0.7);
             backdrop-filter: blur(12px);

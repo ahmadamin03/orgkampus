@@ -9,7 +9,7 @@
     <div class="p-6 border-b border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
             <h3 class="text-lg font-bold text-white">Daftar Anggota Organisasi</h3>
-            <p class="text-xs text-zinc-500 mt-1">Total terdaftar: {{ $members ? $members->count() : 0 }} orang anggota</p>
+            <p class="text-xs text-zinc-500 mt-1">Total terdaftar: {{ $members ? $members->total() : 0 }} orang anggota</p>
         </div>
         <button onclick="toggleModal('create-modal')" class="bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-brand-500/10 hover:shadow-brand-500/20 transform hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center gap-2 text-sm">
             <i class="fa-solid fa-user-plus text-xs"></i>
@@ -81,6 +81,27 @@
             </tbody>
         </table>
     </div>
+    </div>
+
+    @if ($members->hasPages())
+    <div class="p-4 border-t border-zinc-900 flex items-center justify-between">
+        <div class="text-xs text-zinc-500">
+            Halaman {{ $members->currentPage() }} dari {{ $members->lastPage() }}
+        </div>
+        <div class="flex gap-2">
+            @if ($members->onFirstPage())
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-600 text-xs font-medium">Sebelumnya</span>
+            @else
+                <a href="{{ $members->previousPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-medium transition-colors">Sebelumnya</a>
+            @endif
+            @if ($members->hasMorePages())
+                <a href="{{ $members->nextPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-xs font-medium transition-colors">Selanjutnya</a>
+            @else
+                <span class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-600 text-xs font-medium">Selanjutnya</span>
+            @endif
+        </div>
+    </div>
+    @endif
 </div>
 
 <!-- ================= CREATE MODAL ================= -->
