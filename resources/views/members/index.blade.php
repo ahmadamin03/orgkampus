@@ -4,6 +4,25 @@
 @section('page_title', 'Manajemen Anggota')
 
 @section('content')
+
+{{-- Flash Messages --}}
+@if(session('success'))
+<div class="mb-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ session('success') }}</span>
+</div>
+@endif
+@if($errors->any())
+<div class="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-start gap-3">
+    <i class="fa-solid fa-circle-exclamation mt-0.5"></i>
+    <ul class="list-disc list-inside space-y-1">
+        @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 <div class="bg-darkbg-900/60 backdrop-blur-md border border-zinc-900 rounded-2xl shadow-xl">
     <!-- Header Controls -->
     <div class="p-6 border-b border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4">

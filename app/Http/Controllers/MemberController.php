@@ -26,7 +26,7 @@ class MemberController extends Controller
             'role_organisasi' => 'required|string|max:100',
             'departemen' => 'nullable|string|max:100',
             'status' => 'required|in:Aktif,Nonaktif',
-            'password' => ['required', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
+            'password' => ['required', 'string', 'min:6'],
         ]);
 
         $data['password'] = Hash::make($data['password']);
@@ -60,7 +60,7 @@ class MemberController extends Controller
             'role_organisasi' => 'required|string|max:100',
             'departemen' => 'nullable|string|max:100',
             'status' => 'required|in:Aktif,Nonaktif',
-            'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
+            'password' => ['nullable', 'string', 'min:6'],
         ]);
 
         if ($data['password'] ?? false) {
