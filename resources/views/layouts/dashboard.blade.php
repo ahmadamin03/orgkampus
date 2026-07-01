@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dasbor') | OrgKampus</title>
 
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ea580c'/%3E%3Cstop offset='100%25' stop-color='%23f59e0b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-size='18' font-weight='800' text-anchor='middle' fill='white' font-family='system-ui'%3EO%3C/text%3E%3C/svg%3E">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,37 +43,37 @@
         <!-- Navigation Links (scrollable) -->
         <nav class="flex-1 overflow-y-auto p-4 space-y-1.5">
                 <!-- Dashboard Link -->
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('dashboard')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('dashboard')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
                     <span>Dasbor</span>
                 </a>
 
                 <!-- Manajemen Anggota -->
-                <a href="{{ route('members.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('members.*')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('members.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('members.*')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-users w-5 text-center text-base"></i>
                     <span>Anggota</span>
                 </a>
 
                 <!-- Manajemen Program Kerja & Tugas -->
-                <a href="{{ route('prokers.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('prokers.*')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('prokers.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('prokers.*')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-clipboard-list-check w-5 text-center text-base"></i>
                     <span>Program Kerja & Tugas</span>
                 </a>
 
                 <!-- Manajemen Event & Kepanitiaan -->
-                <a href="{{ route('events.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('events.*')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('events.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('events.*')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-calendar-star w-5 text-center text-base"></i>
                     <span>Event & Panitia</span>
                 </a>
 
                 <!-- Manajemen Surat & Administrasi -->
-                <a href="{{ route('surats.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('surats.*')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('surats.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('surats.*')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-envelope-open-text w-5 text-center text-base"></i>
                     <span>Surat & Administrasi</span>
                 </a>
 
                 <!-- Manajemen Keuangan -->
-                <a href="{{ route('keuangans.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('keuangans.*')) bg-brand-500/10 text-brand-400 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
+                <a href="{{ route('keuangans.index') }}" class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 @if(request()->routeIs('keuangans.*')) bg-brand-500/20 text-brand-300 border-l-4 border-brand-500 pl-3 @else text-zinc-400 hover:text-white hover:bg-zinc-900/60 @endif">
                     <i class="fa-solid fa-wallet w-5 text-center text-base"></i>
                     <span>Keuangan Kas</span>
                 </a>
