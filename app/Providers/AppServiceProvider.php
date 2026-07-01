@@ -16,6 +16,7 @@ use App\Services\OrganizationService;
 use App\Services\ProkerService;
 use App\Services\SuratService;
 use App\Services\TugasService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +34,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        URL::forceScheme('https');
     }
 }
